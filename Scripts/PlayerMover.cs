@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class PlayerMover : MonoBehaviour
 {
     [SerializeField] private float _speedMovement;
-
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
     private void Start()

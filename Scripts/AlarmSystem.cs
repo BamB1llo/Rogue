@@ -16,36 +16,30 @@ public class AlarmSystem : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void IncreaseVolume()
     {
-        if (collision.gameObject.TryGetComponent<Player>(out Player player))
+        if (_reduceSound != null)
         {
-            if (_reduceSound != null)
-            {
-                StopCoroutine(_reduceSound);
-                _audioSource.Stop();
-            }
-
-            _increaseSound = StartCoroutine(ChangeVolume(_finalVolueMaximum, _duration));
-            _audioSource.Play();
+            StopCoroutine(_reduceSound);
+            _audioSource.Stop();
         }
-    }
 
-    private void OnTriggerExit2D(Collider2D collision)
+        _increaseSound = StartCoroutine(ChangeVolume(_finalVolueMaximum, _duration));
+        _audioSource.Play();
+    }
+       
+    public void DecreaseVolume()
     {
-        if (collision.gameObject.TryGetComponent<Player>(out Player player))
+        if (_increaseSound != null)
         {
-            if(_increaseSound != null) 
-            {
-                StopCoroutine(_increaseSound);
-                _audioSource.Stop();
-            }
-
-            _reduceSound = StartCoroutine(ChangeVolume(_finalVolumeMinimum, _duration));
-            _audioSource.Play();
+            StopCoroutine(_increaseSound);
+            _audioSource.Stop();
         }
-    }
 
+        _reduceSound = StartCoroutine(ChangeVolume(_finalVolumeMinimum, _duration));
+        _audioSource.Play();
+    }
+           
     private IEnumerator ChangeVolume(float finalValue, float duration)
     {
         while (_audioSource.volume != finalValue)
