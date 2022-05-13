@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class AlarmSystem: MonoBehaviour
+[RequireComponent(typeof(AudioSource))]
+public class AlarmSystem : MonoBehaviour
 {
     private Coroutine _increaseSound;
     private Coroutine _reduceSound;
@@ -21,8 +20,14 @@ public class AlarmSystem: MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent<Player>(out Player player))
         {
-            _audioSource.Play();
+            if (_reduceSound != null)
+            {
+                StopCoroutine(_reduceSound);
+                _audioSource.Stop();
+            }
+
             _increaseSound = StartCoroutine(ChangeVolume(_finalVolueMaximum, _duration));
+            _audioSource.Play();
         }
     }
 
@@ -30,8 +35,11 @@ public class AlarmSystem: MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent<Player>(out Player player))
         {
-            StopCoroutine(_increaseSound);
-            _audioSource.Stop();
+            if(_increaseSound != null) 
+            {
+                StopCoroutine(_increaseSound);
+                _audioSource.Stop();
+            }
 
             _reduceSound = StartCoroutine(ChangeVolume(_finalVolumeMinimum, _duration));
             _audioSource.Play();
