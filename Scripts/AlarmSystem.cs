@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class AlarmSystem : MonoBehaviour
 {
+    [SerializeField] private Door _door;
+
     private Coroutine _increaseSound;
     private Coroutine _reduceSound;
     private AudioSource _audioSource;
@@ -11,9 +13,31 @@ public class AlarmSystem : MonoBehaviour
     private float _finalVolumeMinimum = 0;
     private float _duration = 0.1f;
 
+    private void OnEnable()
+    {
+        _door.WalkedInTheDoor += OnWenhThroughDoor;
+        _door.WalkedOutOfTheDoor += OnWalkedOutOfTheDoor;
+    }
+
+    private void OnDisable()
+    {
+        _door.WalkedInTheDoor -= OnWenhThroughDoor;
+        _door.WalkedOutOfTheDoor -= OnWalkedOutOfTheDoor;
+    }
+
     private void Start()
     {
         _audioSource = GetComponent<AudioSource>();
+    }
+
+    private void OnWenhThroughDoor()
+    {
+        IncreaseVolume();
+    }
+
+    private void OnWalkedOutOfTheDoor()
+    {
+        DecreaseVolume();
     }
 
     public void IncreaseVolume()
