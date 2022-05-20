@@ -1,17 +1,20 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(AlarmSystem))]
+[RequireComponent(typeof(Alarm))]
 public class Door : MonoBehaviour
 {
-    public UnityAction WalkedInTheDoor;
-    public UnityAction WalkedOutOfTheDoor;
+    private bool _isInHouse; 
 
+    public UnityAction<bool> WentThroughDoor;
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.TryGetComponent<Player>(out Player player))
         {
-            WalkedInTheDoor?.Invoke();
+            _isInHouse = true;
+
+            WentThroughDoor?.Invoke(_isInHouse);
         }
     }
 
@@ -19,7 +22,9 @@ public class Door : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent<Player>(out Player player))
         {
-            WalkedOutOfTheDoor?.Invoke();
+            _isInHouse = false;
+
+            WentThroughDoor?.Invoke(_isInHouse);
         }
     }
 }
